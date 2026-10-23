@@ -1,0 +1,86 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: var(--font-be-vietnam), ui-sans-serif, system-ui, sans-serif;
+  --color-brand-red: var(--brand-red);
+  --color-brand-orange: var(--brand-orange);
+  --color-brand-gold: var(--brand-gold);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+}
+
+:root {
+  color-scheme: dark;
+  --brand-red: #dc2626;
+  --brand-orange: #f97316;
+  --brand-gold: #fbbf24;
+  --background: #090d16;
+  --foreground: #f1f5f9;
+  --surface: #111827;
+  --surface-2: #161e2e;
+  --card: #0f1522;
+  --card-foreground: #f1f5f9;
+  --popover: #0f1522;
+  --popover-foreground: #f1f5f9;
+  --primary: #dc2626;
+  --primary-foreground: #ffffff;
+  --secondary: #1a2233;
+  --secondary-foreground: #f1f5f9;
+  --muted: #1a2233;
+  --muted-foreground: #8b95a7;
+  --accent: #f97316;
+  --accent-foreground: #ffffff;
+  --destructive: #dc2626;
+  --border: rgb(255 255 255 / 0.08);
+  --input: rgb(255 255 255 / 0.12);
+  --ring: #f97316;
+  --radius: 0.625rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@utility text-glow-orange {
+  text-shadow: 0 0 12px rgb(249 115 22 / 0.55);
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
