@@ -1,14 +1,21 @@
 import { Bell, Radio, ShieldCheck, Volleyball } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-const items = [
-  { key: 'home', label: 'Trang chủ', icon: Volleyball, active: true },
+export type TabKey = 'home' | 'live' | 'notifications' | 'account'
+
+const items: { key: TabKey; label: string; icon: typeof Bell; badge?: number; kyc?: boolean }[] = [
+  { key: 'home', label: 'Trang chủ', icon: Volleyball },
   { key: 'live', label: 'Trực tiếp', icon: Radio },
   { key: 'notifications', label: 'Thông báo', icon: Bell, badge: 3 },
   { key: 'account', label: 'Tài khoản', icon: ShieldCheck, kyc: true },
 ]
 
-export function BottomNav() {
+type Props = {
+  active: TabKey
+  onChange: (tab: TabKey) => void
+}
+
+export function BottomNav({ active, onChange }: Props) {
   return (
     <nav
       aria-label="Điều hướng chính"
@@ -17,12 +24,14 @@ export function BottomNav() {
       <ul className="grid h-[60px] grid-cols-4">
         {items.map((item) => {
           const Icon = item.icon
+          const isActive = item.key === active
           return (
             <li key={item.key}>
-              <a
-                href="#"
-                aria-current={item.active ? 'page' : undefined}
-                className="relative flex h-full flex-col items-center justify-center gap-0.5"
+              <button
+                type="button"
+                onClick={() => onChange(item.key)}
+                aria-current={isActive ? 'page' : undefined}
+                className="relative flex size-full flex-col items-center justify-center gap-0.5"
               >
                 <span className="relative">
                   {item.key === 'live' && (
@@ -34,7 +43,7 @@ export function BottomNav() {
                   <Icon
                     className={cn(
                       'relative size-[22px]',
-                      item.active
+                      isActive
                         ? 'text-brand-orange drop-shadow-[0_0_8px_rgb(249_115_22/0.9)]'
                         : item.key === 'live'
                           ? 'text-brand-red'
@@ -56,25 +65,25 @@ export function BottomNav() {
                   )}
                 </span>
                 {item.key === 'live' && (
-                  <span className="absolute top-1.5 right-[calc(50%-22px)] rounded-sm bg-brand-red px-0.5 text-[6.5px] font-black leading-[9px] text-white">
+                  <span
+                    className="absolute top-1.5 right-[calc(50%-22px)] rounded-sm bg-brand-red px-0.5 text-[6.5px] font-black leading-[9px] text-white"
+                    aria-hidden="true"
+                  >
                     LIVE
                   </span>
                 )}
                 <span
-                  className={cn(
-                    'text-[10px] font-semibold',
-                    item.active ? 'text-brand-orange' : 'text-white/55',
-                  )}
+                  className={cn('text-[10px] font-semibold', isActive ? 'text-brand-orange' : 'text-white/55')}
                 >
                   {item.label}
                 </span>
-                {item.active && (
+                {isActive && (
                   <span
                     className="absolute bottom-1 h-1 w-5 rounded-full bg-brand-red shadow-[0_0_10px_2px_rgb(220_38_38/0.85)]"
                     aria-hidden="true"
                   />
                 )}
-              </a>
+              </button>
             </li>
           )
         })}

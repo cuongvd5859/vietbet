@@ -1,7 +1,7 @@
-import Image from 'next/image'
 import { ChevronRight, Flame } from 'lucide-react'
 import { leagues, type BetSelection } from '@/lib/matches'
 import { MatchCard } from './match-card'
+import { LeagueHeader } from './league-header'
 
 type Props = {
   selectedId: string | null
@@ -25,23 +25,7 @@ export function HotMatches({ selectedId, onSelect }: Props) {
       <div className="flex flex-col gap-2.5">
         {leagues.map((league) => (
           <div key={league.id} className="overflow-hidden rounded-xl ring-1 ring-white/8">
-            <div className="flex items-center justify-between bg-gradient-to-r from-[#5a0b0b] to-[#2a0606] px-2.5 py-1.5">
-              <div className="flex items-center gap-2">
-                <Image
-                  src={`/leagues/${league.kind}.png`}
-                  alt=""
-                  width={22}
-                  height={22}
-                  className="size-[22px] rounded-full ring-1 ring-white/20"
-                />
-                <h3 className="text-[11.5px] font-extrabold uppercase tracking-wide text-white">
-                  {league.name}
-                </h3>
-              </div>
-              <span className="text-[10px] font-medium text-white/55">
-                {league.country} · {league.matches.length} trận
-              </span>
-            </div>
+            <LeagueHeader league={league} meta={`${league.country} · ${league.matches.length} trận`} />
             {league.matches.map((match) => (
               <MatchCard key={match.id} match={match} selectedId={selectedId} onSelect={onSelect} />
             ))}

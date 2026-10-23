@@ -1,16 +1,61 @@
 import { ChevronRight, Clock, Star } from 'lucide-react'
-import type { BetSelection, Match, Team } from '@/lib/matches'
+import { cn } from '@/lib/utils'
+import type { BetSelection, Market, Match, Team } from '@/lib/matches'
 import { OddsButton } from './odds-button'
 
-function TeamCrest({ team }: { team: Team }) {
+export function TeamCrest({ team, className }: { team: Team; className?: string }) {
   return (
     <span
-      className="flex size-7 shrink-0 items-center justify-center rounded-full text-[8px] font-extrabold text-white ring-2 ring-white/10"
+      className={cn(
+        'flex size-7 shrink-0 items-center justify-center rounded-full text-[8px] font-extrabold text-white ring-2 ring-white/10',
+        className,
+      )}
       style={{ background: `linear-gradient(135deg, ${team.primary} 0 50%, ${team.secondary} 50% 100%)` }}
       aria-hidden="true"
     >
       <span className="rounded-sm bg-black/55 px-0.5 leading-tight">{team.short}</span>
     </span>
+  )
+}
+
+type MarketGridProps = {
+  markets: Market[]
+  matchLabel: string
+  selectedId: string | null
+  onSelect: (selection: BetSelection) => void
+  columns?: 2 | 3
+}
+
+export function MarketGrid({ markets, matchLabel, selectedId, onSelect, columns = 3 }: MarketGridProps) {
+  return (
+    <div className={cn('grid gap-1.5', columns === 3 ? 'grid-cols-3' : 'grid-cols-2')}>
+      {markets.map((market) => (
+        <div key={market.key} className="flex flex-col gap-1">
+          <p className="text-center text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
+            {market.title}
+          </p>
+          <div className="flex flex-1 flex-col gap-1">
+            {market.options.map((option) => (
+              <OddsButton
+                key={option.id}
+                option={option}
+                selected={selectedId === option.id}
+                ariaLabel={`${matchLabel}, ${market.title} ${option.label}, tỷ lệ ${option.value.toFixed(2)}`}
+                onSelect={() =>
+                  onSelect({
+                    id: option.id,
+                    matchLabel,
+                    marketTitle: market.title,
+                    label: option.label,
+                    value: option.value,
+                  })
+                }
+              />
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
   )
 }
 
@@ -59,33 +104,13 @@ export function MatchCard({ match, selectedId, onSelect }: Props) {
         </div>
       </div>
 
-      <div className="mt-2.5 grid grid-cols-3 gap-1.5">
-        {match.markets.map((market) => (
-          <div key={market.key} className="flex flex-col gap-1">
-            <p className="text-center text-[9px] font-bold uppercase tracking-wider text-muted-foreground">
-              {market.title}
-            </p>
-            <div className="flex flex-1 flex-col gap-1">
-              {market.options.map((option) => (
-                <OddsButton
-                  key={option.id}
-                  option={option}
-                  selected={selectedId === option.id}
-                  ariaLabel={`${matchLabel}, ${market.title} ${option.label}, tỷ lệ ${option.value.toFixed(2)}`}
-                  onSelect={() =>
-                    onSelect({
-                      id: option.id,
-                      matchLabel,
-                      marketTitle: market.title,
-                      label: option.label,
-                      value: option.value,
-                    })
-                  }
-                />
-              ))}
-            </div>
-          </div>
-        ))}
+      <div className="mt-2.5">
+        <MarketGrid
+          markets={match.markets}
+          matchLabel={matchLabel}
+          selectedId={selectedId}
+          onSelect={onSelect}
+        />
       </div>
     </article>
   )
